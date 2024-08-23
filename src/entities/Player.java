@@ -19,6 +19,7 @@ public class Player extends Entity {
         this.keyH = keyH;
         screenX = gp.screenWidth / 2;
         screenY = gp.screenHeight / 2;
+        solidArea = new Rectangle(8, 16, 32, 32);
         this.setDefaultValues();
         this.getPlayerImage();
     }
@@ -47,17 +48,27 @@ public class Player extends Entity {
 
             if (keyH.upPressed) {
                 direction = "up";
-                worldY -= speed;
             } else if (keyH.downPressed) {
                 direction = "down";
-                worldY += speed;
             } else if (keyH.leftPressed) {
                 direction = "left";
-                worldX -= speed;
             } else if (keyH.rightPressed) {
                 direction = "right";
-                worldX += speed;
             }
+            //Check tile collision
+            collisionOn = false;
+            gp.collisionChecker.checkTile(this);
+
+            //If Collision is false, player can move
+            if(!collisionOn) {
+                switch (direction) {
+                    case "up" -> {worldY -= speed;}
+                    case "down" -> {worldY += speed;}
+                    case "left" -> {worldX -= speed;}
+                    case "right" -> {worldX += speed;}
+                }
+            }
+
             spriteCounter++;
             if (spriteCounter > 12) {
                 if (spriteNum == 1) {
